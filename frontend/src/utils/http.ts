@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BaseUrl =
   process.env.NODE_ENV === "production"
-    ? "https://api.example.com"
+    ? process.env.REACT_APP_API_URL
     : "http://localhost:8000";
 
 export const get = async (url: string) => {
