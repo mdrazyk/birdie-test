@@ -10,7 +10,6 @@ import { get } from "../../utils/http";
 import { useQuery } from "@tanstack/react-query";
 import { RecipientTimelineComponent } from "./RecipientTimeline/RecipientTimeline.component";
 import { RecipientTimelineRecord } from "./types";
-import { useState } from "react";
 import { RecipientDetailsComponent } from "./RecipientDetails.component";
 
 const getRecipientVisitDates = (recipientId: string) =>
@@ -25,20 +24,24 @@ const getRecipientTimelineForDate = (
 export const RecipientDetailsContainer = ({
   selectedRecipient,
   selectedVisitStringDate,
+  selectedRecipientTimelineDetails,
   setSelectedVisitStringDate,
+  setSelectedRecipientTimelineDetails,
 }: {
   selectedRecipient: string | null;
   selectedVisitStringDate: string | null;
-  setSelectedVisitStringDate: (visitDateString: string) => void;
-}) => {
-  const [
-    selectedRecipientTimelineDetails,
-    setSelectedRecipientTimelineDetails,
-  ] = useState<{
+  selectedRecipientTimelineDetails: {
     id: string;
     details: Record<string, string>;
-  } | null>(null);
-
+  } | null;
+  setSelectedVisitStringDate: (visitDateString: string) => void;
+  setSelectedRecipientTimelineDetails: (
+    selectedRecipientTimelineDetails: {
+      id: string;
+      details: Record<string, string>;
+    } | null
+  ) => void;
+}) => {
   const getRecipientVisitDatesQuery = useQuery<string[]>({
     queryKey: ["recipients", selectedRecipient, "visit-dates"],
     queryFn: () => getRecipientVisitDates(selectedRecipient!),
@@ -56,6 +59,11 @@ export const RecipientDetailsContainer = ({
       getRecipientTimelineForDate(selectedRecipient!, selectedVisitStringDate!),
     enabled: !!selectedRecipient && !!selectedVisitStringDate,
   });
+
+  const handleSetSelectedVisitStringDate = (visitDateString: string) => {
+    setSelectedVisitStringDate(visitDateString);
+    setSelectedRecipientTimelineDetails(null);
+  }
 
   const visitDateString = getRecipientVisitDatesQuery.data || [];
   const recipientTimeline = getRecipientTimelineForDateQuery.data || [];
@@ -82,7 +90,7 @@ export const RecipientDetailsContainer = ({
             (visitDateString) => new Date(visitDateString)
           )}
           isLoading={getRecipientVisitDatesQuery.isLoading}
-          setSelectedVisitStringDate={setSelectedVisitStringDate}
+          setSelectedVisitStringDate={handleSetSelectedVisitStringDate}
         />
         <Heading fontSize="lg" mt="20px">
           Details

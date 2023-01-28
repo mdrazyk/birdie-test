@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Center, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../utils/http";
 
@@ -43,11 +43,17 @@ export const RecipientListContainer = ({
         Care recipients
       </Heading>
       <VStack gap="10px" w="100%">
-        <RecipientListComponent
-          selectedRecipient={selectedRecipient}
-          setSelectedRecipient={setSelectedRecipient}
-          recipients={recipients}
-        />
+        {getRecipientsQuery.isLoading ? (
+          <Center w="100%" h="100%">
+            <Spinner size="xl" />
+          </Center>
+        ) : (
+          <RecipientListComponent
+            selectedRecipient={selectedRecipient}
+            setSelectedRecipient={setSelectedRecipient}
+            recipients={recipients}
+          />
+        )}
       </VStack>
     </VStack>
   );
