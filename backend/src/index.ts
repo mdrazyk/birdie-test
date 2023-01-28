@@ -1,8 +1,9 @@
-import app from './application';
+import { appFactory } from "./application";
 
 const port = process.env.PORT || 8000;
 
+const app = appFactory();
+
 app.listen(port, () => {
-  // tslint:disable-next-line:no-console
   console.log(`Server started at http://localhost:${port}`);
 });

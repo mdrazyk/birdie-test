@@ -1,6 +1,10 @@
 import { Heading, VStack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { get } from "../../utils/http";
 
 import { RecipientListComponent } from "./RecipientList.component";
+
+const getRecipients = () => get("/recipients/all");
 
 export const RecipientListContainer = ({
   selectedRecipient,
@@ -9,24 +13,19 @@ export const RecipientListContainer = ({
   selectedRecipient: string | null;
   setSelectedRecipient: (recipientId: string) => void;
 }) => {
-  // TODO: fetch recipients from API
-  const recipients = [
+  const getRecipientsQuery = useQuery<
     {
-      recipientId: "1",
-      firstName: "Michael",
-      lastName: "Scott",
-    },
-    {
-      recipientId: "2",
-      firstName: "Pam",
-      lastName: "Beesly",
-    },
-    {
-      recipientId: "3",
-      firstName: "Jim",
-      lastName: "Halpert",
-    },
-  ];
+      recipientId: string;
+      firstName: string;
+      lastName: string;
+    }[]
+  >({
+    queryKey: ["recipients"],
+    queryFn: getRecipients,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+  const recipients = getRecipientsQuery.data || [];
 
   return (
     <VStack

@@ -8,14 +8,20 @@ export const RecipientDashboard = () => {
     null
   );
 
+  const [selectedVisitStringDate, setSelectedVisitStringDate] = useState<string | null>(null);
+
   return (
     <HStack h="100vh" p="10px" bg="blackAlpha.100">
       <RecipientListContainer
         selectedRecipient={selectedRecipient}
         setSelectedRecipient={setSelectedRecipient}
       />
-      <VStack h="100%" w="100%" bg="white" borderRadius="md" boxShadow="md">
-        <RecipientDetailsContainer selectedRecipient={selectedRecipient} />
+      <VStack h="100%" w="100%">
+        <RecipientDetailsContainer
+          selectedRecipient={selectedRecipient}
+          selectedVisitStringDate={selectedVisitStringDate}
+          setSelectedVisitStringDate={setSelectedVisitStringDate}
+        />
       </VStack>
     </HStack>
   );
